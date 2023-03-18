@@ -1,0 +1,23 @@
+{
+  "pins" : [
+    {
+      "identity" : "nuke",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kean/Nuke.git",
+      "state" : {
+        "revision" : "6241e100294a2aa70d1811641585ab7da780bd0f",
+        "version" : "12.0.0"
+      }
+    },
+    {
+      "identity" : "tmdb",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/adamayoung/TMDb.git",
+      "state" : {
+        "revision" : "34950d5c751e9fe3b151041700d8a1255bec67ca",
+        "version" : "8.1.0"
+      }
+    }
+  ],
+  "version" : 2
+}

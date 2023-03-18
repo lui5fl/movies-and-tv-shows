@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "TheMovieDatabaseLogo.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
