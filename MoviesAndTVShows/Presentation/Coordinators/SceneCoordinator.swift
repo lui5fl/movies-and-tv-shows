@@ -14,6 +14,7 @@ final class SceneCoordinator: Coordinator {
     private let context: Context
     private let navigationController: UINavigationController
     private var mainViewModel: MainViewModelProtocol?
+    private var itemToRelink: Item?
 
     // MARK: Initialization
 
@@ -46,6 +47,27 @@ final class SceneCoordinator: Coordinator {
 // MARK: - MainViewControllerDelegate
 
 extension SceneCoordinator: MainViewControllerDelegate {
+
+    func mainViewController(
+        _ mainViewController: MainViewController,
+        didSelectRelinkActionForItem item: Item
+    ) {
+        let searchViewController = SearchViewController
+            .init(
+                viewModel: SearchViewModel(context: context),
+                delegate: self
+            )
+            .dismissable()
+        searchViewController.title = "Relink"
+        let navigationController = UINavigationController(
+            rootViewController: searchViewController
+        )
+        visibleViewController?.present(
+            navigationController,
+            animated: true
+        )
+        itemToRelink = item
+    }
 
     func mainViewController(
         _ mainViewController: MainViewController,
@@ -140,13 +162,26 @@ extension SceneCoordinator: SearchViewControllerDelegate {
         _ searchViewController: SearchViewController,
         didSelectSearchResult searchResult: SearchResult
     ) {
-        context.database.items.insert(
-            kind: searchResult.kind,
-            posterURLString: searchResult.posterURLString,
-            progress: searchResult.progress,
-            timestamp: nil,
-            title: searchResult.title
-        )
+        if let itemToRelink {
+            context.database.items.insert(
+                kind: itemToRelink.kind,
+                posterURLString: searchResult.posterURLString,
+                progress: itemToRelink.progress,
+                timestamp: itemToRelink.timestamp,
+                title: searchResult.title
+            )
+            context.database.items.delete(itemToRelink)
+            self.itemToRelink = nil
+        } else {
+            context.database.items.insert(
+                kind: searchResult.kind,
+                posterURLString: searchResult.posterURLString,
+                progress: searchResult.progress,
+                timestamp: nil,
+                title: searchResult.title
+            )
+        }
+
         try? context.database.save()
         mainViewModel?.reloadData()
         visibleViewController?.dismiss(animated: true)
