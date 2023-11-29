@@ -74,6 +74,13 @@ extension SceneCoordinator: MainViewControllerDelegate {
 
     func mainViewController(
         _ mainViewController: MainViewController,
+        didSelectRelinkActionForItem item: Item
+    ) {
+        // TODO: Present SearchViewController
+    }
+
+    func mainViewController(
+        _ mainViewController: MainViewController,
         didSelectDeleteActionForItem item: Item
     ) {
         let alertController = UIAlertController(

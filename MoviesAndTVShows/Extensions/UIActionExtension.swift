@@ -28,6 +28,19 @@ extension UIAction {
         }
     }
 
+    /// Creates a `UIAction` instance for a "relink" action.
+    ///
+    /// - Parameters:
+    ///   - handler: The closure to call when the action is selected.
+    static func relink(handler: @escaping () -> Void) -> UIAction {
+        UIAction(
+            title: "Relink",
+            image: UIImage(systemName: "link")
+        ) { _ in
+            handler()
+        }
+    }
+
     /// Creates a `UIAction` instance for a "change date" action.
     ///
     /// - Parameters:

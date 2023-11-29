@@ -23,6 +23,16 @@ protocol MainViewControllerDelegate: AnyObject {
         didSelectChangeDateActionForItem item: Item
     )
 
+    /// Tells the delegate that the "relink" action for the specified item was selected.
+    ///
+    /// - Parameters:
+    ///   - mainViewController: The `MainViewController` instance informing the delegate of this event.
+    ///   - item: The item whose "relink" action was selected.
+    func mainViewController(
+        _ mainViewController: MainViewController,
+        didSelectRelinkActionForItem item: Item
+    )
+
     /// Tells the delegate that the "delete" action for the specified item was selected.
     ///
     /// - Parameters:
@@ -81,6 +91,7 @@ final class MainViewController: UIViewController {
                     UIMenu(
                         submenus: [
                             self?.moveToProgressActionSubmenu(item: item),
+                            self?.relinkActionSubmenu(item: item),
                             self?.changeDateActionSubmenu(item: item),
                             self?.deleteActionSubmenu(item: item)
                         ].compactMap { $0 }
@@ -237,6 +248,21 @@ private extension MainViewController {
                 )
             }
         }
+    }
+
+    func relinkActionSubmenu(item: Item) -> [UIAction] {
+        [
+            .relink { [weak self] in
+                guard let self else {
+                    return
+                }
+
+                delegate?.mainViewController(
+                    self,
+                    didSelectRelinkActionForItem: item
+                )
+            }
+        ]
     }
 
     func changeDateActionSubmenu(item: Item) -> [UIAction]? {
