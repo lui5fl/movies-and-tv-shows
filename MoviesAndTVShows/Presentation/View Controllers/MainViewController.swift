@@ -13,6 +13,17 @@ protocol MainViewControllerDelegate: AnyObject {
 
     // MARK: Methods
 
+    /// Tells the delegate that the "relink" action for the specified item was selected.
+    ///
+    /// - Parameters:
+    ///   - mainViewController: The `MainViewController` instance informing
+    ///     the delegate of this event.
+    ///   - item: The item whose "relink" action was selected.
+    func mainViewController(
+        _ mainViewController: MainViewController,
+        didSelectRelinkActionForItem item: Item
+    )
+
     /// Tells the delegate that the "change date" action for the specified item was selected.
     ///
     /// - Parameters:
@@ -81,7 +92,7 @@ final class MainViewController: UIViewController {
                     UIMenu(
                         submenus: [
                             self?.moveToProgressActionSubmenu(item: item),
-                            self?.changeDateActionSubmenu(item: item),
+                            self?.otherActionsSubmenu(item: item),
                             self?.deleteActionSubmenu(item: item)
                         ].compactMap { $0 }
                     )
@@ -239,23 +250,32 @@ private extension MainViewController {
         }
     }
 
-    func changeDateActionSubmenu(item: Item) -> [UIAction]? {
-        guard viewModel.progress == .watched else {
-            return nil
-        }
-
-        return [
-            .changeDate { [weak self] in
+    func otherActionsSubmenu(item: Item) -> [UIAction] {
+        [
+            .relink { [weak self] in
                 guard let self else {
                     return
                 }
 
-                self.delegate?.mainViewController(
+                delegate?.mainViewController(
+                    self,
+                    didSelectRelinkActionForItem: item
+                )
+            },
+            viewModel.progress == .watched ? .changeDate { [weak self] in
+                guard let self else {
+                    return
+                }
+
+                delegate?.mainViewController(
                     self,
                     didSelectChangeDateActionForItem: item
                 )
-            }
+            } : nil
         ]
+            .compactMap {
+                $0
+            }
     }
 
     func deleteActionSubmenu(item: Item) -> [UIAction] {

@@ -105,7 +105,10 @@ private extension SearchViewController {
     }
 
     func setUpAppearance() {
-        title = "Search"
+        if title == nil {
+            title = "Search"
+        }
+
         view.backgroundColor = .systemBackground
     }
 
